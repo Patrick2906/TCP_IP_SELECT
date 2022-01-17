@@ -1,0 +1,1 @@
+g++ -o "/home/devhost/projects/testTcp/bin/x64/Debug/testTcp.out" -Wl,--no-undefined -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack /home/devhost/projects/testTcp/obj/x64/Debug/client.o /home/devhost/projects/testTcp/obj/x64/Debug/server.o /home/devhost/projects/testTcp/obj/x64/Debug/wrap.o
