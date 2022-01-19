@@ -1,13 +1,17 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <sys/socket.h>
-
+#include <ctype.h>
+#include <unistd.h>
+#include <inttypes.h> // SCNu16
+#include <netinet/in.h>
 
 void perr_exit(const char* s)
 {
 	perror(s);
 	exit(1);
 }
+
 int Accept(int fd, struct sockaddr* sa, socklen_t* salenptr)
 {
 	int n;
@@ -125,7 +129,7 @@ ssize_t Writen(int fd, const void* vptr, size_t n)
 	return n;
 }
 
-static ssize_t my_read(int fd, char* ptr)
+ssize_t my_read(int fd, char* ptr)
 {
 	static int read_cnt;
 	static char* read_ptr;
@@ -168,4 +172,26 @@ ssize_t Readline(int fd, void* vptr, size_t maxlen)
 	}
 	*ptr = 0;
 	return n;
+}
+
+/* Utility function to display a string str
+   followed by an IPV4 internet address a,
+   written in decimal notation
+*/
+void showAddr(char* str, struct sockaddr_in* a)
+{
+	char* p;
+
+	p = htonl(a->sin_addr.s_addr);
+
+	printf("%s %s on port: ", str, p);
+	printf("%" SCNu16, ntohs(a->sin_port));
+	printf("\t");
+	printf("debug");
+}
+
+/*only use for debug */
+void showDebug(void)
+{
+	printf("debug");
 }

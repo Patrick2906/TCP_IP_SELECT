@@ -35,12 +35,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\client\client.c" />
-    <ClCompile Include="src\server\server.c" />
-    <ClCompile Include="wrap.c" />
+    <ClInclude Include="include\wrap.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="wrap.h" />
+    <ClCompile Include="src\server\server_main.c" />
+    <ClCompile Include="src\wrap.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{f17406a1-13f9-4212-99e5-e86f6c4f6e40}</ProjectGuid>
@@ -82,7 +81,17 @@
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <ItemDefinitionGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>
+    </IncludePath>
+    <SourcePath>
+    </SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>\testTcp\testTcp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

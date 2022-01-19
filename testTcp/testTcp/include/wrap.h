@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <unistd.h>
 
+
 void perr_exit(const char* s);
 int Accept(int fd, struct sockaddr* sa, socklen_t* salenptr);
 int Bind(int fd, const struct sockaddr* sa, socklen_t salen);
@@ -17,4 +18,6 @@ ssize_t Readn(int fd, void* vptr, size_t n);
 ssize_t Writen(int fd, const void* vptr, size_t n);
 ssize_t my_read(int fd, char* ptr);
 ssize_t Readline(int fd, void* vptr, size_t maxlen);
+void showAddr(char* str, struct sockaddr_in* a);
+void showDebug(void);
 #endif

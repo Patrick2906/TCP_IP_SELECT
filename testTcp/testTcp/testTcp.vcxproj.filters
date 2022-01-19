@@ -15,18 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\client\client.c">
-      <Filter>src\client</Filter>
-    </ClCompile>
-    <ClCompile Include="src\server\server.c">
+    <ClCompile Include="src\server\server_main.c">
       <Filter>src\server</Filter>
     </ClCompile>
-    <ClCompile Include="wrap.c">
+    <ClCompile Include="src\wrap.c">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="wrap.h">
+    <ClInclude Include="include\wrap.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
