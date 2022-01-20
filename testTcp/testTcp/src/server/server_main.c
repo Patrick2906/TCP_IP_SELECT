@@ -13,9 +13,12 @@
 
 #define MAXLINE 80
 #define SERV_PORT 6666
-#define SERV_TIMEOUT_DEFAULT 60 // [s] seconds for the select function time out
+#define SERV_TIMEOUT_DEFAULT 10 // [s] seconds for the select function time out
 #define FD_SETSIZE_USR		32
 #define IP_ADDRESS_SERVER "172.27.132.88"
+
+static const char CHK_MSG[] = "-CHK\r\n";
+
 static void sigchldHandler(int);
 static void sigpipeHandler(int);
 int main(void)
@@ -68,7 +71,7 @@ int main(void)
 		else if (childPid > 0)
 		{
 			printf("pararent now:");
-			close(connfd);	// pararent to close connection
+			Close(connfd);	// pararent to close connection
 		}
 		else
 		{
@@ -84,31 +87,62 @@ int main(void)
 void serviceFunc(int socketNumber, struct sockaddr_in clientAddr)
 {
 	int i, maxi, maxfd, sockfd;
-	int setsReady, client[FD_SETSIZE]; 	/* FD_SETSIZE默认为 1024 */
+	int setReady, client[FD_SETSIZE]; 	/* FD_SETSIZE默认为 1024 */
 	struct sockaddr_in cliaddr;
 	ssize_t n;
-	fd_set rset, allset;
+	fd_set rset;		// read
+	struct timeval tval;                //timeval structure
 	char buf[MAXLINE], bufRecv[MAXLINE];	// 读写 buf
 	char str[INET_ADDRSTRLEN]; 			// INET_ADDRSTRLEN 16 
 
 	sockfd = socketNumber;
 	cliaddr = clientAddr;
-	FD_ZERO(&allset);
-	FD_SET(sockfd, &allset);
-
+	maxi = sockfd;
+	FD_ZERO(&rset);
+	FD_SET(sockfd, &rset);
 	for (; ; )
-	{	
+	{
+		tval.tv_sec = SERV_TIMEOUT_DEFAULT;	// [s] 60
+		tval.tv_usec = 0;
 		printf("received from %s at PORT %d\n", \
 			inet_ntop(AF_INET, &cliaddr.sin_addr, str, sizeof(str)), ntohs(cliaddr.sin_port));	// 地址和端口号才正真换成正确的
-		n = Read(socketNumber, buf, MAXLINE);
-		if (n == 0)
+		
+		if ((setReady = Select((FD_SETSIZE), &rset, NULL, NULL, &tval)) > 0)
 		{
-			printf("the other side has been closed.\n");
-			break;
+			if (FD_ISSET(sockfd, &rset))
+			{		
+				printf("new message form client \n");
+				n = Read(sockfd, buf, MAXLINE);
+				if (n == 0)
+				{
+					FD_CLR(sockfd, &rset); 
+					printf("the other side has been closed on socket %d.\n");
+					Close(sockfd);
+					printf("*process %d* Connection closed on socket %d \n", getpid(), socket);
+					return;
+				}
+				else
+				{
+				
+					// n > 0
+					for (i = 0; i < n; i++)
+					{
+						buf[i] = toupper(buf[i]);
+					}
+					Write(sockfd, buf, n);
+				}
+			}
 		}
-		for (i = 0; i < n; i++)
-			buf[i] = toupper(buf[i]);
-		Write(socketNumber, buf, n);
+		else
+		{
+			//timeout.
+			printf("Timeout. No message received from client. Closing connection\t");
+			Close(sockfd);
+			printf("-> Connection closed\n");
+			return;
+		}
+
+		
 	}
 }
 

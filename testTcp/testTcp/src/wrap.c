@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <inttypes.h> // SCNu16
 #include <netinet/in.h>
+#include <sys/select.h>
 
 void perr_exit(const char* s)
 {
@@ -171,6 +172,28 @@ ssize_t Readline(int fd, void* vptr, size_t maxlen)
 			return -1;
 	}
 	*ptr = 0;
+	return n;
+}
+
+int Select(int __nfds, fd_set* __restrict __readfds,
+		fd_set* __restrict __writefds,
+		fd_set* __restrict __exceptfds,
+		struct timeval* __restrict __timeout)
+{
+	int n;
+again:
+	if ((n = select(__nfds, __readfds, __writefds, __exceptfds, __timeout)) == -1)
+	{
+		if (errno == EINTR)
+		{
+			goto again;
+		}
+		else
+		{
+			perr_exit("select error");
+		}
+	}
+	printf("select update");
 	return n;
 }
 
