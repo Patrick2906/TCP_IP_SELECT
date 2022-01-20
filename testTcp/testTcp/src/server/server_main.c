@@ -11,16 +11,15 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#define MAXLINE 80
+#define MAXLINE 2048
 #define SERV_PORT 6666
 #define SERV_TIMEOUT_DEFAULT 10 // [s] seconds for the select function time out
 #define FD_SETSIZE_USR		32
-#define IP_ADDRESS_SERVER "172.27.132.88"
-
-static const char CHK_MSG[] = "-CHK\r\n";
+//#define IP_ADDRESS_SERVER "172.27.132.88"
 
 static void sigchldHandler(int);
 static void sigpipeHandler(int);
+
 int main(void)
 {
 	/* define var */
@@ -92,7 +91,7 @@ void serviceFunc(int socketNumber, struct sockaddr_in clientAddr)
 	ssize_t n;
 	fd_set rset;		// read
 	struct timeval tval;                //timeval structure
-	char buf[MAXLINE], bufRecv[MAXLINE];	// ¶ÁÐ´ buf
+	char bufSnd[MAXLINE], bufRecv[MAXLINE];	// ¶ÁÐ´ buf
 	char str[INET_ADDRSTRLEN]; 			// INET_ADDRSTRLEN 16 
 
 	sockfd = socketNumber;
@@ -112,7 +111,7 @@ void serviceFunc(int socketNumber, struct sockaddr_in clientAddr)
 			if (FD_ISSET(sockfd, &rset))
 			{		
 				printf("new message form client \n");
-				n = Read(sockfd, buf, MAXLINE);
+				n = Read(sockfd, bufRecv, MAXLINE);
 				if (n == 0)
 				{
 					FD_CLR(sockfd, &rset); 
@@ -124,12 +123,10 @@ void serviceFunc(int socketNumber, struct sockaddr_in clientAddr)
 				else
 				{
 				
-					// n > 0
-					for (i = 0; i < n; i++)
-					{
-						buf[i] = toupper(buf[i]);
-					}
-					Write(sockfd, buf, n);
+					int j;
+					for (j = 0; j < n; j++)
+						bufSnd[j] = bufRecv[n - j - 1]; /* ·´×ª×Ö·û´® */
+					Write(sockfd, bufSnd, n);
 				}
 			}
 		}

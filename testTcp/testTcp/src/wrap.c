@@ -17,7 +17,8 @@ int Accept(int fd, struct sockaddr* sa, socklen_t* salenptr)
 {
 	int n;
 again:
-	if ((n = accept(fd, sa, salenptr)) < 0) {
+	if ((n = accept(fd, sa, salenptr)) < 0) 
+	{
 		if ((errno == ECONNABORTED) || (errno == EINTR))
 			goto again;
 		else
@@ -69,7 +70,8 @@ ssize_t Write(int fd, const void* ptr, size_t nbytes)
 {
 	ssize_t n;
 again:
-	if ((n = write(fd, ptr, nbytes)) == -1) {
+	if ((n = write(fd, ptr, nbytes)) == -1)
+	{
 		if (errno == EINTR)
 			goto again;
 		else
@@ -93,8 +95,10 @@ ssize_t Readn(int fd, void* vptr, size_t n)
 	ptr = vptr;
 	nleft = n;
 
-	while (nleft > 0) {
-		if ((nread = read(fd, ptr, nleft)) < 0) {
+	while (nleft > 0) 
+	{
+		if ((nread = read(fd, ptr, nleft)) < 0) 
+		{
 			if (errno == EINTR)
 				nread = 0;
 			else
@@ -117,8 +121,10 @@ ssize_t Writen(int fd, const void* vptr, size_t n)
 	ptr = vptr;
 	nleft = n;
 
-	while (nleft > 0) {
-		if ((nwritten = write(fd, ptr, nleft)) <= 0) {
+	while (nleft > 0) 
+	{
+		if ((nwritten = write(fd, ptr, nleft)) <= 0) 
+		{
 			if (nwritten < 0 && errno == EINTR)
 				nwritten = 0;
 			else
@@ -136,9 +142,11 @@ ssize_t my_read(int fd, char* ptr)
 	static char* read_ptr;
 	static char read_buf[100];
 
-	if (read_cnt <= 0) {
+	if (read_cnt <= 0) 
+	{
 	again:
-		if ((read_cnt = read(fd, read_buf, sizeof(read_buf))) < 0) {
+		if ((read_cnt = read(fd, read_buf, sizeof(read_buf))) < 0)
+		{
 			if (errno == EINTR)
 				goto again;
 			return -1;
@@ -158,13 +166,16 @@ ssize_t Readline(int fd, void* vptr, size_t maxlen)
 	char c, * ptr;
 	ptr = vptr;
 
-	for (n = 1; n < maxlen; n++) {
-		if ((rc = my_read(fd, &c)) == 1) {
+	for (n = 1; n < maxlen; n++) 
+	{
+		if ((rc = my_read(fd, &c)) == 1)
+		{
 			*ptr++ = c;
 			if (c == '\n')
 				break;
 		}
-		else if (rc == 0) {
+		else if (rc == 0)
+		{
 			*ptr = 0;
 			return n - 1;
 		}
