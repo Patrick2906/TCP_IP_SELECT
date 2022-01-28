@@ -36,8 +36,19 @@ int Bind(int fd, const struct sockaddr* sa, socklen_t salen)
 int Connect(int fd, const struct sockaddr* sa, socklen_t salen)
 {
 	int n;
+again:
 	if ((n = connect(fd, sa, salen)) < 0)
-		perr_exit("connect error");
+	{
+		if (errno != EINPROGRESS)
+		{
+			perr_exit("connect error");
+		}
+		else
+		{
+			goto again;
+		}
+	}
+		
 	return n;
 }
 int Listen(int fd, int backlog)
@@ -138,7 +149,7 @@ ssize_t Writen(int fd, const void* vptr, size_t n)
 
 ssize_t my_read(int fd, char* ptr)
 {
-	static int read_cnt;
+	static int read_cnt = 0;
 	static char* read_ptr;
 	static char read_buf[100];
 
@@ -204,7 +215,7 @@ again:
 			perr_exit("select error");
 		}
 	}
-	printf("select update");
+	printf("select update \n");
 	return n;
 }
 
@@ -217,11 +228,10 @@ void showAddr(char* str, struct sockaddr_in* a)
 	char* p;
 
 	p = htonl(a->sin_addr.s_addr);
-
+	
 	printf("%s %s on port: ", str, p);
 	printf("%" SCNu16, ntohs(a->sin_port));
-	printf("\t");
-	printf("debug");
+
 }
 
 /*only use for debug */

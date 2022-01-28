@@ -3,7 +3,7 @@
 #define __WRAP_H_
 #include <stdio.h>
 #include <unistd.h>
-
+#include <sys/select.h>
 
 void perr_exit(const char* s);
 int Accept(int fd, struct sockaddr* sa, socklen_t* salenptr);
@@ -20,4 +20,8 @@ ssize_t my_read(int fd, char* ptr);
 ssize_t Readline(int fd, void* vptr, size_t maxlen);
 void showAddr(char* str, struct sockaddr_in* a);
 void showDebug(void);
+int Select(int __nfds, fd_set* __restrict __readfds,
+	fd_set* __restrict __writefds,
+	fd_set* __restrict __exceptfds,
+	struct timeval* __restrict __timeout);
 #endif
