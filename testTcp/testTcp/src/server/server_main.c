@@ -11,14 +11,15 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-#define MAXLINE 2048
+#define MAXLINE 1024
 #define SERV_PORT 6666
-#define SERV_TIMEOUT_DEFAULT 10 // [s] seconds for the select function time out
+#define SERV_TIMEOUT_DEFAULT 10 // (s)seconds for the select function time out
 #define FD_SETSIZE_USR		32
-//#define IP_ADDRESS_SERVER "172.27.132.88"
+#define IP_ADDRESS_SERVER "172.31.188.101"
 
 static void sigchldHandler(int);
 static void sigpipeHandler(int);
+void serviceFunc(int socketNumber, struct sockaddr_in clientAddr);
 
 int main(void)
 {
