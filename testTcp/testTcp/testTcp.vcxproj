@@ -38,6 +38,7 @@
     <ClInclude Include="include\wrap.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="serverSelect.c" />
     <ClCompile Include="src\server\server_main.c" />
     <ClCompile Include="src\wrap.c" />
   </ItemGroup>
@@ -86,6 +87,10 @@
     </IncludePath>
     <SourcePath>
     </SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <ProjectPublicIncludePath>
+    </ProjectPublicIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
