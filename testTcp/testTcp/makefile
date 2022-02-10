@@ -22,4 +22,4 @@ client: ./client/client.o wrap.o
 
 .PHONY: clean all
 clean: 
-	-rm server client $(obj)
+	-rm ./server/server ./client/client $(obj)

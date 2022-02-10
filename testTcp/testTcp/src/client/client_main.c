@@ -7,6 +7,7 @@
 #include <arpa/inet.h>
 #include <sys/select.h>
 #include <fcntl.h>
+#include "./../../include/wrap.h"
 
 #define MAXLINE 512
 #define SERV_PORT 6666

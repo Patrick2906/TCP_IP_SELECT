@@ -10,6 +10,7 @@
 #include <strings.h>
 #include <sys/wait.h>
 #include <signal.h>
+#include "./../../include/wrap.h"
 
 #define MAXLINE 1024
 #define SERV_PORT 6666
@@ -71,6 +72,7 @@ int main(void)
 		else if (childPid > 0)
 		{
 			printf("pararent now:");
+			printf("socket num: %d", connfd);
 			Close(connfd);	// pararent to close connection
 		}
 		else
@@ -118,15 +120,16 @@ void serviceFunc(int socketNumber, struct sockaddr_in clientAddr)
 					FD_CLR(sockfd, &rset); 
 					printf("the other side has been closed on socket %d.\n");
 					Close(sockfd);
-					printf("*process %d* Connection closed on socket %d \n", getpid(), socket);
+					printf("*process %d* Connection closed on socket %d \n", getpid(), sockfd);
 					return;
 				}
 				else
 				{
-				
+					sleep(10);
 					int j;
 					for (j = 0; j < n; j++)
 						bufSnd[j] = bufRecv[n - j - 1]; /* ·´×ª×Ö·û´® */
+					printf("write back messag: %s \n", bufSnd);
 					Write(sockfd, bufSnd, n);
 				}
 			}
