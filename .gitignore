@@ -4,3 +4,5 @@ testTcp/testTcp/bin/
 testTcp/testTcp/testTcp_client/
 testTcp/testTcp/readme/
 testTcp/testTcp/pythonTest/.idea/
+testTcp/testTcp/pythonTest/__pycache__/
+testTcp/testTcp/pythonTest/Client_socketScript/__pycache__/
